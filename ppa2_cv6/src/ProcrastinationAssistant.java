@@ -22,11 +22,11 @@ class ProcrastinationAssistant {
         while(stack.get() != null){
             System.out.println("Aktuální úkol: " + stack.get());
             System.out.println("Co s úkolem? (H = Hotovo, R = Rozdělit)");
-            stack.removeLast();
             line = sc.nextLine();
 
             switch (line){
                 case "R":
+                    stack.removeLast();
                     System.out.println("Prosím zadej podúkoly, ukončené prázdným řetězcem");
                     line = sc.nextLine();
                     while(line.length() > 0){
@@ -49,6 +49,10 @@ class ProcrastinationAssistant {
 
                     break;
                 case "H":
+                    stack.removeLast();
+                    break;
+                default:
+                    System.out.println("Požadováný vstup je R nebo H, místo toho bylo zadáno: " + line);
                     break;
             }
 
