@@ -1,19 +1,27 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Odbavovani prichozich hovoru pomoci operatoru
  * @author Libor Vasa
  */
 class Dispatcher {
     /** Fronta prichozich hovoru */
-    private CallerQueue callerQueue;
+    //private CallerQueue callerQueue;
+    private GenericQueue<IncomingCall> callerQueue;
     /** Fronta operatoru */
-    private OperatorQueue operatorQueue;
+    //private OperatorQueue operatorQueue;
+    private GenericQueue<FreeOperator> operatorQueue;
 
     /**
      * Vytvori novou instanci s prazdnymi frontami
      */
     public Dispatcher() {
-        this.callerQueue = new CallerQueue();
-        this.operatorQueue = new OperatorQueue();
+        //this.callerQueue = new CallerQueue();
+        //this.operatorQueue = new OperatorQueue();
+        this.callerQueue = new GenericQueue<IncomingCall>();
+        this.operatorQueue = new GenericQueue<FreeOperator>();
     }
 
     /**
@@ -48,7 +56,7 @@ class Dispatcher {
         }
 
         else {
-            System.out.println("Operator or IncomingCall queue is empty\n");
+            //System.out.println("Operator or IncomingCall queue is empty");
         }
     }
 
@@ -59,6 +67,20 @@ class Dispatcher {
      */
     private void assignCall(IncomingCall call, FreeOperator operator) {
         System.out.println(operator.name + " is answering call from +420 " + call.callingNumber);
-        System.out.println("The caller has waited for " + Math.max(0, operator.time - call.time) + " seconds.\n");
+        System.out.println("The caller has waited for " + Math.max(0, operator.time - call.time) + " seconds.");
+
+        int callWait = Math.max(0, operator.time - call.time);
+
+        try{
+            CallDispatching.bfw.append(operator.name + " is answering call from +420 " + call.callingNumber + "\n");
+            CallDispatching.bfw.append("The caller has waited for " + callWait + " seconds.\n");
+        }
+
+
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+
     }
 }
